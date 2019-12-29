@@ -37,7 +37,7 @@ class HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                     colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.3), BlendMode.dstOut),
+                        Colors.black.withOpacity(0.5), BlendMode.dstOut),
                     image:
                         AssetImage('assets/' + RecipeViewModel.selected.image),
                     fit: BoxFit.cover,
