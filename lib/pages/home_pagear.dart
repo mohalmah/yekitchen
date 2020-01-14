@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:yekitchen/viewmodels/recipe_viewmodel.dart';
+import 'package:yekitchen/viewmodels/recipe_viewmodel_ar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' show Platform;
 
 import 'package:ads/ads.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+class HomePageAr extends StatefulWidget {
+  HomePageAr({Key key, this.title}) : super(key: key);
   final String title;
   @override
   HomePageState createState() => new HomePageState();
@@ -24,7 +24,7 @@ _launchURL() async {
     throw 'Could not launch $url';
   }
 }
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePageAr> {
   TextEditingController editingController = TextEditingController();
   Ads appAds;
   int _coins = 0;
@@ -94,13 +94,13 @@ class HomePageState extends State<HomePage> {
                     child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 200),
                         child: Container(
-                          key: ValueKey<int>(RecipeViewModel.selected.id),
+                          key: ValueKey<int>(RecipeViewModelAr.selected.id),
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                 colorFilter: ColorFilter.mode(
                                     Colors.black.withOpacity(0.2), BlendMode.dstOut),
                                 image:
-                                AssetImage('assets/' + RecipeViewModel.selected.image),
+                                AssetImage('assets/' + RecipeViewModelAr.selected.image),
                                 fit: BoxFit.cover,
                               )),
                           child: Padding(
@@ -116,7 +116,7 @@ class HomePageState extends State<HomePage> {
                                   AnimatedOpacity(
                                       opacity: displayText ? 1.0 : 0.0,
                                       duration: Duration(milliseconds: 200),
-                                      child: Text(RecipeViewModel.selected.title,
+                                      child: Text(RecipeViewModelAr.selected.title,
                                           maxLines: 2,
                                           textDirection: TextDirection.rtl,
                                           textAlign: TextAlign.right,
@@ -128,7 +128,7 @@ class HomePageState extends State<HomePage> {
                                       child: Padding(
                                           padding: EdgeInsets.only(top: 2.0),
                                           child: Text(
-                                              RecipeViewModel.selected.description,
+                                              RecipeViewModelAr.selected.description,
                                               maxLines: 3,
                                               textDirection: TextDirection.rtl,
                                               textAlign: TextAlign.right,
@@ -221,10 +221,10 @@ class HomePageState extends State<HomePage> {
                                 icon: Icon(Icons.video_label,
                                     color: selectedVideo ? Colors.white : Colors.white70),
                                 onPressed: () async {
-                                  String url = RecipeViewModel.selected.sourceUrl;
+                                  String url = RecipeViewModelAr.selected.sourceUrl;
                                   if(await canLaunch(url))
                                     await launch(url);
-                                  print(RecipeViewModel.selected.sourceUrl);
+                                  print(RecipeViewModelAr.selected.sourceUrl);
                                 }
 
                             ))),
@@ -256,7 +256,7 @@ class HomePageState extends State<HomePage> {
                           height: MediaQuery.of(context).size.height / 5.3,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: RecipeViewModel.recipes.length,
+                            itemCount: RecipeViewModelAr.recipes.length,
                             itemBuilder: (context, index) {
                               return recipeCard(context, index);
                             },
@@ -269,13 +269,13 @@ class HomePageState extends State<HomePage> {
                       duration: Duration(milliseconds: 200),
                       child: selectedIngredients
                           ? listCard(context, 'المكونات',
-                          RecipeViewModel.selected.ingredients)
+                          RecipeViewModelAr.selected.ingredients)
                           : Container(height: 0, width: 0)),
                   AnimatedSwitcher(
                       duration: Duration(milliseconds: 200),
                       child: selectedInstructions
                           ? listCard(context, 'طريقة التحضير',
-                        RecipeViewModel.selected.instructions, )
+                        RecipeViewModelAr.selected.instructions, )
                           : Container(height: 0, width: 0)),
                   AnimatedSwitcher(
                       duration: Duration(milliseconds: 200),
@@ -370,13 +370,13 @@ class HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(bottom: 8.0),
                         child: Center(
                             child: Text("الوقت المتوقع للطبخ  " +
-                                RecipeViewModel.selected.readyInMinutes.toString() +
+                                RecipeViewModelAr.selected.readyInMinutes.toString() +
                                 " دقيقة"))),
                     Padding(
                         padding: EdgeInsets.only(bottom: 8.0),
                         child: Center(
                             child: Text("لعدد " +
-                                RecipeViewModel.selected.servings.toString()+ " شخص"))),
+                                RecipeViewModelAr.selected.servings.toString()+ " شخص"))),
                     Padding(padding: EdgeInsets.only(bottom: 8.0), child:Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -387,7 +387,7 @@ class HomePageState extends State<HomePage> {
                             ),
                           ),
                           Icon(
-                            RecipeViewModel.selected.vegan
+                            RecipeViewModelAr.selected.vegan
                                 ? Icons.check
                                 : Icons.close,
                             size: 14.0,
@@ -399,7 +399,7 @@ class HomePageState extends State<HomePage> {
                             ),
                           ),
                           Icon(
-                            RecipeViewModel.selected.vegetarian
+                            RecipeViewModelAr.selected.vegetarian
                                 ? Icons.check
                                 : Icons.close,
                             size: 14.0,
@@ -415,7 +415,7 @@ class HomePageState extends State<HomePage> {
                             ),
                           ),
                           Icon(
-                            RecipeViewModel.selected.dairyFree
+                            RecipeViewModelAr.selected.dairyFree
                                 ? Icons.check
                                 : Icons.close,
                             size: 14.0,
@@ -427,13 +427,13 @@ class HomePageState extends State<HomePage> {
                             ),
                           ),
                           Icon(
-                            RecipeViewModel.selected.glutenFree
+                            RecipeViewModelAr.selected.glutenFree
                                 ? Icons.check
                                 : Icons.close,
                             size: 14.0,
                           )
                         ])),
-                    Text(RecipeViewModel.selected.description,
+                    Text(RecipeViewModelAr.selected.description,
                         textAlign: TextAlign.right ),
                   ])),
               Row(
@@ -449,10 +449,10 @@ class HomePageState extends State<HomePage> {
                   InkWell(
                     child: Icon(Icons.launch),
                     onTap: () async {
-                      String url = RecipeViewModel.selected.sourceUrl;
+                      String url = RecipeViewModelAr.selected.sourceUrl;
                       if(await canLaunch(url))
                         await launch(url);
-                      print(RecipeViewModel.selected.sourceUrl);
+                      print(RecipeViewModelAr.selected.sourceUrl);
                     },
                   )
                 ],
@@ -485,7 +485,7 @@ class HomePageState extends State<HomePage> {
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
                                           image: AssetImage('assets/' +
-                                              RecipeViewModel
+                                              RecipeViewModelAr
                                                   .recipes[index].image)))),
                             ])),
                     Column(
@@ -495,7 +495,7 @@ class HomePageState extends State<HomePage> {
                           Container(
                               width:
                               (MediaQuery.of(context).size.width / 3.5),
-                              child: Text(RecipeViewModel.recipes[index].title,
+                              child: Text(RecipeViewModelAr.recipes[index].title,
                                   softWrap: true,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis)),
@@ -508,7 +508,7 @@ class HomePageState extends State<HomePage> {
                                 size: 14.0,
                               ),
                               Text(
-                                RecipeViewModel.recipes[index].readyInMinutes
+                                RecipeViewModelAr.recipes[index].readyInMinutes
                                     .toString(),
                                 style: TextStyle(
                                   color: Colors.white70,
@@ -522,7 +522,7 @@ class HomePageState extends State<HomePage> {
                                 size: 14.0,
                               ),
                               Text(
-                                  RecipeViewModel.recipes[index].servings
+                                  RecipeViewModelAr.recipes[index].servings
                                       .toString(),
                                   style: TextStyle(
                                     color: Colors.white70,
@@ -536,7 +536,7 @@ class HomePageState extends State<HomePage> {
                                 size: 14.0,
                               ),
                               Text(
-                                  RecipeViewModel.recipes[index].likes
+                                  RecipeViewModelAr.recipes[index].likes
                                       .toString(),
                                   style: TextStyle(
                                     color: Colors.white70,
@@ -549,7 +549,7 @@ class HomePageState extends State<HomePage> {
       onTap: () {
         appAds.showFullScreenAd(state: this);
         setState(() {
-          RecipeViewModel.selected = RecipeViewModel.recipes[index];
+          RecipeViewModelAr.selected = RecipeViewModelAr.recipes[index];
         });
       },
     );

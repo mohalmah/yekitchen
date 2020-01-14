@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:yekitchen/viewmodels/recipe_viewmodel.dart';
-
+import 'package:yekitchen/pages/home_pagear.dart';
 class HomePage extends StatefulWidget {
   @override
   State createState() => HomePageState();
@@ -142,8 +142,9 @@ class HomePageState extends State<HomePage> {
                     });
                   },
                 )),
+
                 Padding(
-                    padding: EdgeInsets.only(top: 16.0),
+                    padding: EdgeInsets.only(bottom: 16.0, top:16.0),
                     child: frostedIconButton(IconButton(
                       icon: Icon(Icons.info_outline,
                           color: selectedInfo ? Colors.white : Colors.white70),
@@ -163,6 +164,17 @@ class HomePageState extends State<HomePage> {
                         });
                       },
                     ))),
+                  frostedIconButton(IconButton(
+                    icon: Icon(Icons.text_format,
+                        color:
+                        selectedInstructions ? Colors.white : Colors.white70),
+                    onPressed: ()  => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => HomePageAr(),
+                        )))),
+
+
                 Spacer(),
                 
                 Container(
