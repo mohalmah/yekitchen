@@ -2,10 +2,14 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:yekitchen/viewmodels/recipe_viewmodel_ar.dart';
+import 'package:yekitchen/pages/home_page.dart';
 import 'package:url_launcher/url_launcher.dart';
+//import 'package:ads/ads.dart';
 import 'dart:io' show Platform;
+import 'package:yekitchen/viewmodels/recipe_viewmodel.dart';
 
-import 'package:ads/ads.dart';
+
+//import 'package:ads/ads.dart';
 
 class HomePageAr extends StatefulWidget {
   HomePageAr({Key key, this.title}) : super(key: key);
@@ -26,7 +30,7 @@ _launchURL() async {
 }
 class HomePageState extends State<HomePageAr> {
   TextEditingController editingController = TextEditingController();
-  Ads appAds;
+ /* Ads appAds;
   int _coins = 0;
 
   final String appId = Platform.isAndroid
@@ -45,17 +49,16 @@ class HomePageState extends State<HomePageAr> {
       ? 'ca-app-pub-3940256099942544/5224354917'
       : 'ca-app-pub-3940256099942544/1712485313';
 
+  */
+
   bool displayText;
   bool selectedIngredients;
   bool selectedInstructions;
   bool selectedInfo;
   bool selectedVideo;
-  final duplicateItems = List<String>.generate(10000, (i) => "Item $i");
-  var items = List<String>();
 
   @override
   void initState() {
-    items.addAll(duplicateItems);
 
     displayText = true;
     selectedIngredients = false;
@@ -64,7 +67,7 @@ class HomePageState extends State<HomePageAr> {
     selectedVideo = false;
 
     super.initState();
-    appAds = Ads(
+  /*  appAds = Ads(
       appId,
       bannerUnitId: bannerUnitId,
       screenUnitId: screenUnitId,
@@ -76,11 +79,13 @@ class HomePageState extends State<HomePageAr> {
 
     );
     //appAds.showBannerAd();
+
+   */
   }
 
   @override
   void dispose() {
-    appAds.dispose();
+    //  appAds.dispose();
     super.dispose();
   }
   @override
@@ -138,7 +143,7 @@ class HomePageState extends State<HomePageAr> {
                               )),
                         )),
                     onTap: () {
-                      appAds.showFullScreenAd(state: this);
+                      //appAds.showFullScreenAd(state: this);
                       if (!displayText) {
                         setState(() {
                           displayText = true;
@@ -176,7 +181,7 @@ class HomePageState extends State<HomePageAr> {
                                       ? Colors.white
                                       : Colors.white70),
                               onPressed: () {
-                                appAds.showFullScreenAd(state: this);
+                                //  appAds.showFullScreenAd(state: this);
                                 setState(() {
                                   if (displayText) {
                                     displayText = false;
@@ -198,7 +203,7 @@ class HomePageState extends State<HomePageAr> {
                               color:
                               selectedInstructions ? Colors.white : Colors.white70),
                           onPressed: () {
-                            appAds.showFullScreenAd(state: this);
+                            // appAds.showFullScreenAd(state: this);
                             setState(() {
                               if (displayText) {
                                 displayText = false;
@@ -234,7 +239,7 @@ class HomePageState extends State<HomePageAr> {
                               icon: Icon(Icons.info_outline,
                                   color: selectedInfo ? Colors.white : Colors.white70),
                               onPressed: () {
-                                appAds.showFullScreenAd(state: this);
+                                //   appAds.showFullScreenAd(state: this);
                                 setState(() {
                                   if (displayText) {
                                     displayText = false;
@@ -249,6 +254,22 @@ class HomePageState extends State<HomePageAr> {
                                   }
                                 });
                               },
+                            ))),
+                        Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: frostedIconButton(IconButton(
+                                icon: Icon(Icons.text_format,
+                                    color: selectedVideo ? Colors.white : Colors.white70),
+                                onPressed: () async {
+                                  String url = RecipeViewModelAr.selected.sourceUrl;
+
+                                  print(RecipeViewModelAr.selected.sourceUrl);
+                                  await RecipeViewModel.load();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => HomePage()));
+                                }
+
                             ))),
                         Spacer(),
 
@@ -442,7 +463,7 @@ class HomePageState extends State<HomePageAr> {
                   InkWell(
                     child: Icon(Icons.favorite_border),
                     onTap: () {
-                      appAds.showFullScreenAd(state: this);
+                      //  appAds.showFullScreenAd(state: this);
                       //add to favourites
                     },
                   ),
@@ -547,9 +568,10 @@ class HomePageState extends State<HomePageAr> {
                         ])
                   ])))),
       onTap: () {
-        appAds.showFullScreenAd(state: this);
+
         setState(() {
           RecipeViewModelAr.selected = RecipeViewModelAr.recipes[index];
+          // appAds.showFullScreenAd(state: this);
         });
       },
     );

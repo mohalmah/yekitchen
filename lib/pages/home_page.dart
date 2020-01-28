@@ -1,17 +1,29 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:yekitchen/viewmodels/recipe_viewmodel_ar.dart';
 import 'package:yekitchen/viewmodels/recipe_viewmodel.dart';
-import 'package:yekitchen/pages/home_pagear.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:yekitchen/pages/home_page_ar.dart';
 class HomePage extends StatefulWidget {
   @override
   State createState() => HomePageState();
 }
 
+_launchURL() async {
+  const url = 'https://flutter.io';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 class HomePageState extends State<HomePage> {
   bool displayText;
   bool selectedIngredients;
   bool selectedInstructions;
   bool selectedInfo;
+  bool selectedVideo;
 
   @override
   void initState() {
@@ -19,6 +31,7 @@ class HomePageState extends State<HomePage> {
     selectedIngredients = false;
     selectedInstructions = false;
     selectedInfo = false;
+    selectedVideo = false;
     super.initState();
   }
 
@@ -29,185 +42,200 @@ class HomePageState extends State<HomePage> {
         body: Material(
             child: SafeArea(
                 child: Stack(fit: StackFit.expand, children: <Widget>[
-          InkWell(
-            child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
-                child: Container(
-                  key: ValueKey<int>(RecipeViewModel.selected.id),
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.5), BlendMode.dstOut),
-                    image:
-                        AssetImage('assets/' + RecipeViewModel.selected.image),
-                    fit: BoxFit.cover,
-                  )),
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).size.height / 5 + 16.0,
-                          left: 16.0,
-                          right:
-                              (MediaQuery.of(context).size.width / 3) - 16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          AnimatedOpacity(
-                              opacity: displayText ? 1.0 : 0.0,
-                              duration: Duration(milliseconds: 200),
-                              child: Text(RecipeViewModel.selected.title,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 34.0))),
-                          AnimatedOpacity(
-                              opacity: displayText ? 1.0 : 0.0,
-                              duration: Duration(milliseconds: 200),
-                              child: Padding(
-                                  padding: EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                      RecipeViewModel.selected.description,
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.white70))))
-                        ],
-                      )),
-                )),
-            onTap: () {
-              if (!displayText) {
-                setState(() {
-                  displayText = true;
-                  selectedIngredients = false;
-                  selectedInstructions = false;
-                  selectedInfo = false;
-                });
-              }
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                frostedRound(TextField(
-                    cursorColor: Colors.white,
-                    decoration: InputDecoration(
-                        fillColor: Colors.white.withOpacity(0.3),
-                        border: InputBorder.none,
-                        hintText: "Search",
-                        filled: true,
-                        contentPadding: EdgeInsets.only(top: 14.0),
-                        prefixIcon: Icon(Icons.search)))),
-                Spacer(),
-                Padding(
-                    padding: EdgeInsets.only(bottom: 16.0),
-                    child: frostedIconButton(IconButton(
-                      icon: Icon(Icons.restaurant_menu,
-                          color: selectedIngredients
-                              ? Colors.white
-                              : Colors.white70),
-                      onPressed: () {
+                  InkWell(
+                    child: AnimatedSwitcher(
+                        duration: Duration(milliseconds: 200),
+                        child: Container(
+                          key: ValueKey<int>(RecipeViewModel.selected.id),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                colorFilter: ColorFilter.mode(
+                                    Colors.black.withOpacity(0.5), BlendMode.dstOut),
+                                image:
+                                AssetImage('assets/' + RecipeViewModel.selected.image),
+                                fit: BoxFit.cover,
+                              )),
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(context).size.height / 5 + 16.0,
+                                  left: 16.0,
+                                  right:
+                                  (MediaQuery.of(context).size.width / 3) - 16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  AnimatedOpacity(
+                                      opacity: displayText ? 1.0 : 0.0,
+                                      duration: Duration(milliseconds: 200),
+                                      child: Text(RecipeViewModel.selected.title,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 34.0))),
+                                  AnimatedOpacity(
+                                      opacity: displayText ? 1.0 : 0.0,
+                                      duration: Duration(milliseconds: 200),
+                                      child: Padding(
+                                          padding: EdgeInsets.only(top: 8.0),
+                                          child: Text(
+                                              RecipeViewModel.selected.description,
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(color: Colors.white70))))
+                                ],
+                              )),
+                        )),
+                    onTap: () {
+                      if (!displayText) {
                         setState(() {
-                          if (displayText) {
-                            displayText = false;
-                          }
-                          if (selectedIngredients) {
-                            displayText = true;
-                            selectedIngredients = false;
-                          } else {
-                            selectedIngredients = true;
-                            selectedInstructions = false;
-                            selectedInfo = false;
-                          }
+                          displayText = true;
+                          selectedIngredients = false;
+                          selectedInstructions = false;
+                          selectedInfo = false;
                         });
-                      },
-                    ))),
-                frostedIconButton(IconButton(
-                  icon: Icon(Icons.list,
-                      color:
-                          selectedInstructions ? Colors.white : Colors.white70),
-                  onPressed: () {
-                    setState(() {
-                      if (displayText) {
-                        displayText = false;
                       }
-                      if (selectedInstructions) {
-                        displayText = true;
-                        selectedInstructions = false;
-                      } else {
-                        selectedIngredients = false;
-                        selectedInstructions = true;
-                        selectedInfo = false;
-                      }
-                    });
-                  },
-                )),
-
-                Padding(
-                    padding: EdgeInsets.only(bottom: 16.0, top:16.0),
-                    child: frostedIconButton(IconButton(
-                      icon: Icon(Icons.info_outline,
-                          color: selectedInfo ? Colors.white : Colors.white70),
-                      onPressed: () {
-                        setState(() {
-                          if (displayText) {
-                            displayText = false;
-                          }
-                          if (selectedInfo) {
-                            displayText = true;
-                            selectedInfo = false;
-                          } else {
-                            selectedIngredients = false;
-                            selectedInstructions = false;
-                            selectedInfo = true;
-                          }
-                        });
-                      },
-                    ))),
-                  frostedIconButton(IconButton(
-                    icon: Icon(Icons.text_format,
-                        color:
-                        selectedInstructions ? Colors.white : Colors.white70),
-                    onPressed: ()  => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => HomePageAr(),
-                        )))),
-
-
-                Spacer(),
-                
-                Container(
-                  height: MediaQuery.of(context).size.height / 4.5,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: RecipeViewModel.recipes.length,
-                    itemBuilder: (context, index) {
-                      return recipeCard(context, index);
                     },
                   ),
-                ),
-              ],
-            ),
-          ),
-          AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
-              child: selectedIngredients
-                  ? listCard(context, 'Ingredients',
-                      RecipeViewModel.selected.ingredients)
-                  : Container(height: 0, width: 0)),
-          AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
-              child: selectedInstructions
-                  ? listCard(context, 'Instructions',
-                      RecipeViewModel.selected.instructions)
-                  : Container(height: 0, width: 0)),
-          AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
-              child: selectedInfo
-                  ? infoCard(context, 'Info')
-                  : Container(height: 0, width: 0)),
-        ]))));
+                  Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        frostedRound(TextField(
+                            cursorColor: Colors.white,
+                            decoration: InputDecoration(
+                                fillColor: Colors.white.withOpacity(0.3),
+                                border: InputBorder.none,
+                                hintText: "Search",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 14.0),
+                                prefixIcon: Icon(Icons.search)))),
+                        Spacer(),
+                        Padding(
+                            padding: EdgeInsets.only(bottom: 16.0),
+                            child: frostedIconButton(IconButton(
+                              icon: Icon(Icons.restaurant_menu,
+                                  color: selectedIngredients
+                                      ? Colors.white
+                                      : Colors.white70),
+                              onPressed: () {
+                                setState(() {
+                                  if (displayText) {
+                                    displayText = false;
+                                  }
+                                  if (selectedIngredients) {
+                                    displayText = true;
+                                    selectedIngredients = false;
+                                  } else {
+                                    selectedIngredients = true;
+                                    selectedInstructions = false;
+                                    selectedInfo = false;
+                                  }
+                                });
+                              },
+                            ))),
+                        frostedIconButton(IconButton(
+                          icon: Icon(Icons.list,
+                              color:
+                              selectedInstructions ? Colors.white : Colors.white70),
+                          onPressed: () {
+                            setState(() {
+                              if (displayText) {
+                                displayText = false;
+                              }
+                              if (selectedInstructions) {
+                                displayText = true;
+                                selectedInstructions = false;
+                              } else {
+                                selectedIngredients = false;
+                                selectedInstructions = true;
+                                selectedInfo = false;
+                              }
+                            });
+                          },
+                        )),
+                        Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: frostedIconButton(IconButton(
+                                icon: Icon(Icons.video_label,
+                                    color: selectedVideo ? Colors.white : Colors.white70),
+                                onPressed: () async {
+                                  String url = RecipeViewModelAr.selected.sourceUrl;
+                                  if(await canLaunch(url))
+                                    await launch(url);
+                                  print(RecipeViewModelAr.selected.sourceUrl);
+                                }
+
+                            ))),
+                        Padding(
+                            padding: EdgeInsets.only(bottom: 16.0, top:16.0),
+                            child: frostedIconButton(IconButton(
+                              icon: Icon(Icons.info_outline,
+                                  color: selectedInfo ? Colors.white : Colors.white70),
+                              onPressed: () {
+                                setState(() {
+                                  if (displayText) {
+                                    displayText = false;
+                                  }
+                                  if (selectedInfo) {
+                                    displayText = true;
+                                    selectedInfo = false;
+                                  } else {
+                                    selectedIngredients = false;
+                                    selectedInstructions = false;
+                                    selectedInfo = true;
+                                  }
+                                });
+                              },
+                            ))),
+                        frostedIconButton(IconButton(
+                          icon: Icon(Icons.text_format,
+                              color:
+                              selectedInstructions ? Colors.white : Colors.white70),
+                          onPressed: () async {
+                            await RecipeViewModelAr.load();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => HomePageAr()));
+                          },
+                        )),
+
+
+
+                        Spacer(),
+
+                        Container(
+                          height: MediaQuery.of(context).size.height / 4.5,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: RecipeViewModel.recipes.length,
+                            itemBuilder: (context, index) {
+                              return recipeCard(context, index);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AnimatedSwitcher(
+                      duration: Duration(milliseconds: 200),
+                      child: selectedIngredients
+                          ? listCard(context, 'Ingredients',
+                          RecipeViewModel.selected.ingredients)
+                          : Container(height: 0, width: 0)),
+                  AnimatedSwitcher(
+                      duration: Duration(milliseconds: 200),
+                      child: selectedInstructions
+                          ? listCard(context, 'Instructions',
+                          RecipeViewModel.selected.instructions)
+                          : Container(height: 0, width: 0)),
+                  AnimatedSwitcher(
+                      duration: Duration(milliseconds: 200),
+                      child: selectedInfo
+                          ? infoCard(context, 'Info')
+                          : Container(height: 0, width: 0)),
+                ]))));
   }
 
   Widget frostedRound(Widget child) {
@@ -255,19 +283,19 @@ class HomePageState extends State<HomePage> {
                   child: Text(
                     title,
                     style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                    TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                   )),
               Padding(
                   padding: EdgeInsets.only(left: 16.0, right: 16.0),
                   child: Divider(color: Colors.white70)),
               Expanded(
                   child: ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (context, int index) {
-                  return Padding(
-                      padding: EdgeInsets.all(16.0), child: Text(list[index]));
-                },
-              ))
+                    itemCount: list.length,
+                    itemBuilder: (context, int index) {
+                      return Padding(
+                          padding: EdgeInsets.all(16.0), child: Text(list[index]));
+                    },
+                  ))
             ])));
   }
 
@@ -291,75 +319,75 @@ class HomePageState extends State<HomePage> {
                   child: Divider(color: Colors.white70)),
               Expanded(
                   child: ListView(children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.only(bottom: 8.0),
-                    child: Center(
-                        child: Text("Ready in " +
-                            RecipeViewModel.selected.readyInMinutes.toString() +
-                            " mins"))),
-                Padding(
-                    padding: EdgeInsets.only(bottom: 8.0),
-                    child: Center(
-                        child: Text("Serves " +
-                            RecipeViewModel.selected.servings.toString()))),
-                Padding(padding: EdgeInsets.only(bottom: 8.0), child:Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        "Vegan       ",
-                        style: TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                      Icon(
-                        RecipeViewModel.selected.vegan
-                            ? Icons.check
-                            : Icons.close,
-                        size: 14.0,
-                      ),
-                      Text(
-                        "Vegetarian",
-                        style: TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                      Icon(
-                        RecipeViewModel.selected.vegetarian
-                            ? Icons.check
-                            : Icons.close,
-                        size: 14.0,
-                      )
-                    ])),
-                Padding(padding: EdgeInsets.only(bottom: 8.0), child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        "Diary Free  ",
-                        style: TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                      Icon(
-                        RecipeViewModel.selected.dairyFree
-                            ? Icons.check
-                            : Icons.close,
-                        size: 14.0,
-                      ),
-                      Text(
-                        "  Gluten Free",
-                        style: TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                      Icon(
-                        RecipeViewModel.selected.glutenFree
-                            ? Icons.check
-                            : Icons.close,
-                        size: 14.0,
-                      )
-                    ])),
-                Text(RecipeViewModel.selected.description),
-              ])),
+                    Padding(
+                        padding: EdgeInsets.only(bottom: 8.0),
+                        child: Center(
+                            child: Text("Ready in " +
+                                RecipeViewModel.selected.readyInMinutes.toString() +
+                                " mins"))),
+                    Padding(
+                        padding: EdgeInsets.only(bottom: 8.0),
+                        child: Center(
+                            child: Text("Serves " +
+                                RecipeViewModel.selected.servings.toString()))),
+                    Padding(padding: EdgeInsets.only(bottom: 8.0), child:Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            "Vegan       ",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                          ),
+                          Icon(
+                            RecipeViewModel.selected.vegan
+                                ? Icons.check
+                                : Icons.close,
+                            size: 14.0,
+                          ),
+                          Text(
+                            "Vegetarian",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                          ),
+                          Icon(
+                            RecipeViewModel.selected.vegetarian
+                                ? Icons.check
+                                : Icons.close,
+                            size: 14.0,
+                          )
+                        ])),
+                    Padding(padding: EdgeInsets.only(bottom: 8.0), child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            "Diary Free11  ",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                          ),
+                          Icon(
+                            RecipeViewModel.selected.dairyFree
+                                ? Icons.check
+                                : Icons.close,
+                            size: 14.0,
+                          ),
+                          Text(
+                            "  Gluten Free",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                          ),
+                          Icon(
+                            RecipeViewModel.selected.glutenFree
+                                ? Icons.check
+                                : Icons.close,
+                            size: 14.0,
+                          )
+                        ])),
+                    Text(RecipeViewModel.selected.description),
+                  ])),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -391,31 +419,31 @@ class HomePageState extends State<HomePage> {
               width: MediaQuery.of(context).size.width / 1.75,
               color: Colors.white.withOpacity(0.3),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                              width: MediaQuery.of(context).size.width / 5,
-                              height: MediaQuery.of(context).size.width / 5,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: AssetImage('assets/' +
-                                          RecipeViewModel
-                                              .recipes[index].image)))),
-                        ])),
-                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                  width: MediaQuery.of(context).size.width / 5,
+                                  height: MediaQuery.of(context).size.width / 5,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: AssetImage('assets/' +
+                                              RecipeViewModel
+                                                  .recipes[index].image)))),
+                            ])),
+                    Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
                               width:
-                                  (MediaQuery.of(context).size.width / 3.5),
+                              (MediaQuery.of(context).size.width / 3.5),
                               child: Text(RecipeViewModel.recipes[index].title,
                                   softWrap: true,
                                   maxLines: 2,
@@ -466,7 +494,7 @@ class HomePageState extends State<HomePage> {
                             ],
                           )
                         ])
-              ])))),
+                  ])))),
       onTap: () {
         setState(() {
           RecipeViewModel.selected = RecipeViewModel.recipes[index];

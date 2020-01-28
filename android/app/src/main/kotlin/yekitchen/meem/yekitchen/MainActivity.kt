@@ -1,4 +1,4 @@
-package yekitchen.meem.yekitchen
+package yekitchen.meem.biz
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

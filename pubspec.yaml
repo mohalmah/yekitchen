@@ -43,6 +43,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - recipesar.json
     - recipes.json
     - assets/1001.jpg
     - assets/1002.jpg
